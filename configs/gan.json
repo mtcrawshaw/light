@@ -1,0 +1,19 @@
+{
+    "data_location": "data/flowers",
+    "num_data_channels": 3,
+    "data_mean": 0.5,
+    "data_stdev": 0.5,
+    "num_workers": 1,
+
+    "image_size": 64,
+    "batch_size": 16,
+    "latent_size": 128,
+    "generator_feature_maps": 64,
+    "discriminator_feature_maps": 64,
+
+    "num_epochs": 5,
+    "learning_rate": 2e-4,
+
+    "cuda": false,
+    "seed": 1
+}

@@ -1,0 +1,16 @@
+First goal is just make videos with morphy landscapes. I want to do this by constructing
+images corresponding to a random walk in the latent space of a generative model,
+probably a GAN.
+
+The following tutorial shows to train a GAN and perform interpolation in the latent
+space to generate videos which transition between two images. This is a good place to
+look for inspiration.
+https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html
+
+Looking at the recent NVAE would also be a good idea, since it would allow for easy
+image encoding.
+
+Flowers dataset came from: https://www.kaggle.com/alxmamaev/flowers-recognition
+
+---------------------------------------------------------------------------------------
+

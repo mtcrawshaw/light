@@ -44,7 +44,7 @@ def train_gan(config: Dict[str, Any]):
             ]
         ),
     )
-    dataloader = torch.utils.data.DataLoader(
+    data_loader = torch.utils.data.DataLoader(
         dataset=dataset,
         batch_size=config["batch_size"],
         shuffle=True,
@@ -63,6 +63,19 @@ def train_gan(config: Dict[str, Any]):
         generator.parameters(), lr=config["learning_rate"]
     )
     loss_fn = nn.BCELoss()
+
+    # Training loop.
+    for epoch in range(config["num_epochs"]):
+        for batch_index, data in enumerate(data_loader):
+
+            # START HERE
+            # Update discriminator network.
+
+            # Update generator network.
+
+            # Print training metrics.
+
+            pass
 
 
 def get_generator(config: Dict[str, Any], device: torch.device) -> nn.Module:

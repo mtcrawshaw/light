@@ -1,19 +1,43 @@
-First goal is just make videos with morphy landscapes. I want to do this by constructing
-images corresponding to a random walk in the latent space of a generative model,
-probably a GAN.
+Road map:
+--> Random walk in latent space with GAN
+    Style transfer
+    ?
 
-The following tutorial shows to train a GAN and perform interpolation in the latent
-space to generate videos which transition between two images. This is a good place to
-look for inspiration.
-https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html
+Current sprint:
+--> Baseline GAN from tutorial (https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html)
+    Higher resolution images
 
-Looking at the recent NVAE would also be a good idea, since it would allow for easy
-image encoding.
+Current task:
+--> Get training to run
+    Save results
+    Image generation option after training
+    Tests
+    Refactoring
 
-Flowers dataset came from: https://www.kaggle.com/alxmamaev/flowers-recognition
+----------------------------------------------------------------------------------------
 
----------------------------------------------------------------------------------------
+Future plans:
 
 Refactoring:
 - Make number of generator/discriminator layers options
 - Initialization options
+
+----------------------------------------------------------------------------------------
+
+Reading:
+
+- Read through GAN papers
+  - Generative Adversarial Networks (Goodfellow)
+  - Unsupervised Representation Learning with Deep Convolutional Generative Adversarial
+    Networks (Radford)
+  - BigGAN?
+  - BigBiGAN?
+  - Look for more recent GAN stuff
+- Read through VAE literature (especially the recent NVAE)
+- Read distill.pub articles about image generation
+
+----------------------------------------------------------------------------------------
+
+Misc info:
+
+Flowers dataset came from: https://www.kaggle.com/alxmamaev/flowers-recognition

@@ -10,12 +10,19 @@ Current sprint:
     Higher resolution images
 
 Current task:
---> Get training to run
-    Save generator output on fixed noise
-    Use metrics/plotting from meta
+    Get training to run
+    Track generator output on fixed latents
+--> Use metrics/plotting from meta
     Save results
     Tests
     Refactoring
+
+Notes for current sprint/task:
+- Ideas for better training:
+  - More data
+  - Longer training time
+  - Hyperparameter tuning
+  - Newer GAN techniques
 
 ----------------------------------------------------------------------------------------
 
@@ -24,6 +31,7 @@ Future plans:
 Refactoring:
 - Make number of generator/discriminator layers options
 - Initialization options
+- Optimizer options
 
 ----------------------------------------------------------------------------------------
 
@@ -45,6 +53,6 @@ Reading:
 
 ----------------------------------------------------------------------------------------
 
-Misc info:
+Misc:
 
 Flowers dataset came from: https://www.kaggle.com/alxmamaev/flowers-recognition

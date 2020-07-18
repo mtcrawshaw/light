@@ -1,14 +1,20 @@
 """ Training and generation with GANs. """
 
 import random
+from math import sqrt, ceil
 from typing import Dict, Any
 
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import numpy as np
 import torch
 import torch.nn as nn
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
+import torchvision.utils as vutils
 
 
+NUM_FIXED_LATENTS = 64
 LABELS = {"fake": 0, "real": 1}
 
 
@@ -60,14 +66,21 @@ def train_gan(config: Dict[str, Any]):
 
     # Construct optimizers and loss function.
     discriminator_optimizer = torch.optim.Adam(
-        discriminator.parameters(), lr=config["learning_rate"]
+        discriminator.parameters(), lr=config["learning_rate"], betas=(0.5, 0.999),
     )
     generator_optimizer = torch.optim.Adam(
-        generator.parameters(), lr=config["learning_rate"]
+        generator.parameters(), lr=config["learning_rate"], betas=(0.5, 0.999),
     )
     loss_fn = nn.BCELoss()
 
+    # Construct fixed latent vectors to track progress of generator through training.
+    fixed_latents = torch.randn(
+        NUM_FIXED_LATENTS, config["latent_size"], 1, 1, device=device
+    )
+
     # Training loop.
+    training_steps = 0
+    generated_imgs = []
     for epoch in range(config["num_epochs"]):
         for batch_index, data in enumerate(data_loader):
 
@@ -113,11 +126,12 @@ def train_gan(config: Dict[str, Any]):
             # Print training metrics.
             if batch_index % config["print_freq"] == 0:
                 print(
-                    "Epoch: %d, Batch: %d / %d"
-                    " | D loss: %.5f, G loss: %.5f"
-                    " | D(x): %.5f, D(G(z)): %.5f / %.5f"
+                    "Epoch: %d / %d, Batch: %d / %d"
+                    "\t D loss: %.5f, G loss: %.5f"
+                    "\t D(x): %.5f, D(G(z)): %.5f / %.5f"
                     % (
                         epoch,
+                        config["num_epochs"],
                         batch_index,
                         len(data_loader),
                         discriminator_loss.item(),
@@ -127,6 +141,26 @@ def train_gan(config: Dict[str, Any]):
                         D_G_z2,
                     )
                 )
+
+            # Generate samples from fixed latent vectors to check progress of generator.
+            if training_steps % config["generate_freq"] == 0 or (
+                epoch == config["num_epochs"] and batch_index == len(data_loader) - 1
+            ):
+                with torch.no_grad():
+                    generated = generator(fixed_latents).detach().cpu()
+                generated_imgs.append(
+                    vutils.make_grid(generated, padding=2, normalize=True)
+                )
+
+            training_steps += 1
+
+    # Animate generated images. This is temporary?
+    fig_len = ceil(sqrt(NUM_FIXED_LATENTS))
+    fig = plt.figure(figsize=(fig_len, fig_len))
+    plt.axis("off")
+    imgs = [[plt.imshow(np.transpose(img, (1, 2, 0)), animated=True)] for img in generated_imgs]
+    ani = animation.ArtistAnimation(fig, imgs, interval=1000, repeat_delay=1000, blit=True)
+    plt.show()
 
 
 def get_generator(config: Dict[str, Any], device: torch.device) -> nn.Module:

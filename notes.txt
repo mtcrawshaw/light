@@ -14,3 +14,6 @@ Flowers dataset came from: https://www.kaggle.com/alxmamaev/flowers-recognition
 
 ---------------------------------------------------------------------------------------
 
+Refactoring:
+- Make number of generator/discriminator layers options
+- Initialization options

@@ -9,6 +9,9 @@ import torchvision.datasets as dset
 import torchvision.transforms as transforms
 
 
+LABELS = {"fake": 0, "real": 1}
+
+
 def train_gan(config: Dict[str, Any]):
     """ Train GAN with settings from ``config``. """
 
@@ -68,14 +71,62 @@ def train_gan(config: Dict[str, Any]):
     for epoch in range(config["num_epochs"]):
         for batch_index, data in enumerate(data_loader):
 
-            # START HERE
-            # Update discriminator network.
+            # Update discriminator network. We perform backward passes with one batch of
+            # all real images, then one batch of all fake images, then add the
+            # gradients. Notice that we call .detach() on ``fake_batch`` before feeding
+            # it into the discriminator, so that we are treating the output of the
+            # generator as constant during this step.
+            discriminator.zero_grad()
+            real_batch = data[0].to(device)
+            batch_size = real_batch.size(0)
+            label = torch.full((batch_size,), LABELS["real"], device=device)
+            real_output = discriminator(real_batch).view(-1)
+            real_discriminator_loss = loss_fn(real_output, label)
+            real_discriminator_loss.backward()
+            D_x = real_output.mean().item()
 
-            # Update generator network.
+            latent_vectors = torch.randn(
+                batch_size, config["latent_size"], 1, 1, device=device
+            )
+            fake_batch = generator(latent_vectors)
+            label.fill_(LABELS["fake"])
+            fake_output = discriminator(fake_batch.detach()).view(-1)
+            fake_discriminator_loss = loss_fn(fake_output, label)
+            fake_discriminator_loss.backward()
+            discriminator_loss = real_discriminator_loss + fake_discriminator_loss
+            discriminator_optimizer.step()
+            D_G_z1 = fake_output.mean().item()
+
+            # Update generator network. Notice that we no longer call .detach() on
+            # ``fake_batch``, so that we can train the generator parameters. Here we
+            # compute the loss as the binary cross entropy between the discriminator
+            # output on a fake batch against the real label, i.e. we want to train the
+            # generator so that the discriminator labels fake images as real.
+            generator.zero_grad()
+            label.fill_(LABELS["real"])
+            discriminator_output = discriminator(fake_batch).view(-1)
+            generator_loss = loss_fn(discriminator_output, label)
+            generator_loss.backward()
+            generator_optimizer.step()
+            D_G_z2 = discriminator_output.mean().item()
 
             # Print training metrics.
-
-            pass
+            if batch_index % config["print_freq"] == 0:
+                print(
+                    "Epoch: %d, Batch: %d / %d"
+                    " | D loss: %.5f, G loss: %.5f"
+                    " | D(x): %.5f, D(G(z)): %.5f / %.5f"
+                    % (
+                        epoch,
+                        batch_index,
+                        len(data_loader),
+                        discriminator_loss.item(),
+                        generator_loss.item(),
+                        D_x,
+                        D_G_z1,
+                        D_G_z2,
+                    )
+                )
 
 
 def get_generator(config: Dict[str, Any], device: torch.device) -> nn.Module:

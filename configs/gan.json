@@ -14,6 +14,7 @@
     "num_epochs": 5,
     "learning_rate": 2e-4,
 
-    "cuda": false,
+    "cuda": true,
+    "print_freq": 50,
     "seed": 1
 }

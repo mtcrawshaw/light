@@ -1,5 +1,5 @@
 {
-    "data_location": "data/flowers",
+    "data_location": "data/celeba",
     "num_data_channels": 3,
     "data_mean": 0.5,
     "data_stdev": 0.5,
@@ -15,7 +15,7 @@
     "learning_rate": 2e-4,
 
     "cuda": true,
-    "print_freq": 10,
-    "generate_freq": 10,
+    "print_freq": 50,
+    "generate_freq": 50,
     "seed": 1
 }

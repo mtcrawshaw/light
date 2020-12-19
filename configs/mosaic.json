@@ -1,0 +1,6 @@
+{
+    "image_path": "data/flowers/daisy/10172379554_b296050f82_n.jpg",
+    "max_child_area": 0.67,
+    "num_splits": 1000,
+    "seed": 1
+}

@@ -26,6 +26,65 @@ Notes for current sprint/task:
 
 ----------------------------------------------------------------------------------------
 
+Mosaic
+
+Architecture:
+Canvas (image, max_child_area, num_splits)
+    self.num_splits: int
+    self.max_child_area: float
+    self.area: Shape
+    partition(self) -> None: (affects self.area)
+    color(self) -> Image:
+Shape (abstract class, not to be instantiated)
+    self.children: List[Shape]
+    partition(self) -> None: (affects self.children)
+    allDescendants(self) -> List[Shape]: (returns a list of all descendants of self, including self)
+    insidePixels(self) -> List[Tuple[int, int]]: (returns a list of all pixel positions inside shape)
+    isInside(self, pos) -> boolean: (returns True if `pos` is inside self, False otherwise)
+    bounds(self) -> Tuple[Tuple[int, int], Tuple[int, int]]: (returns coordinates of top left and bottom right of bounding box)
+    area(self) -> float: (returns area of shape)
+Circle extends Shape (center, radius)
+    self.center: Tuple[int, int]
+    self.radius: int
+    isInside(self, pos)
+    bounds(self)
+    area(self)
+Triangle extends Shape (center, radius)
+    self.v1: Tuple[int, int]
+    self.v2: Tuple[int, int]
+    self.v3: Tuple[int, int]
+    isInside(self, pos)
+    bounds(self)
+    area(self)
+Square subclass
+    self.top_left: Tuple[int, int]
+    self.bottom_right: Tuple[int, int]
+    isInside(self, pos)
+    bounds(self)
+    area(self)
+Mosaic runner (image, max_child_area)
+    # instantiate canvas with image, max_child_area
+    # partition canvas with squares, circles, and triangles
+    # produced colored image
+    # save canvas, image, and config
+
+Done:
+Add mosaic command to main
+
+In progress:
+Shape (everything except partition)
+
+To do:
+Circle
+Triangle
+Square
+Shape (partition)
+Canvas
+Runner
+
+
+----------------------------------------------------------------------------------------
+
 Future plans:
 
 Refactoring:

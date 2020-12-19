@@ -39,27 +39,27 @@ Shape (abstract class, not to be instantiated)
     self.children: List[Shape]
     partition(self) -> None: (affects self.children)
     descendants(self) -> List[Shape]: (returns a list of all descendants of self, including self)
-    insidePositions(self) -> List[Tuple[int, int]]: (returns a list of all pixel positions inside shape)
-    isInside(self, pos) -> boolean: (returns True if `pos` is inside self, False otherwise)
+    inside_positions(self) -> List[Tuple[int, int]]: (returns a list of all pixel positions inside shape)
+    is_inside(self, pos) -> boolean: (returns True if `pos` is inside self, False otherwise)
     bounds(self) -> Tuple[Tuple[int, int], Tuple[int, int]]: (returns coordinates of top left and bottom right of bounding box)
     area(self) -> float: (returns area of shape)
 Circle extends Shape (center, radius)
     self.center: Tuple[int, int]
     self.radius: int
-    isInside(self, pos)
+    is_inside(self, pos)
     bounds(self)
     area(self)
 Triangle extends Shape (center, radius)
     self.v1: Tuple[int, int]
     self.v2: Tuple[int, int]
     self.v3: Tuple[int, int]
-    isInside(self, pos)
+    is_inside(self, pos)
     bounds(self)
     area(self)
 Square subclass
     self.top_left: Tuple[int, int]
     self.bottom_right: Tuple[int, int]
-    isInside(self, pos)
+    is_inside(self, pos)
     bounds(self)
     area(self)
 Mosaic runner (image, max_child_area)
@@ -71,12 +71,12 @@ Mosaic runner (image, max_child_area)
 Done:
 Add mosaic command to main
 Shape (everything except partition)
-
-In progress:
 Circle
 
-To do:
+In progress:
 Triangle
+
+To do:
 Square
 Shape (partition)
 Canvas

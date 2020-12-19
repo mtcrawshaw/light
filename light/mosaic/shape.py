@@ -30,8 +30,11 @@ class Shape:
 
         return d
 
-    def insidePositions(self) -> List[Tuple[int, int]]:
-        """ Returns a list of all positions inside `self`. """
+    def inside_positions(self) -> List[Tuple[int, int]]:
+        """
+        Returns a list of all positions inside `self`. We define inside to include the
+        boundaries of `self`.
+        """
 
         positions: List[Tuple[int, int]] = []
         (left, top), (right, bottom) = self.bounds()
@@ -42,7 +45,7 @@ class Shape:
 
         return positions
 
-    def isInside(self, pos: Tuple[int, int]) -> bool:
+    def is_inside(self, pos: Tuple[int, int]) -> bool:
         """
         Returns True if `pos` is inside `self`, False otherwise. This function should be
         overridden in subclasses.

@@ -40,7 +40,7 @@ class Shape:
         (left, top), (right, bottom) = self.bounds()
         for x in range(left, right + 1):
             for y in range(top, bottom + 1):
-                if self.isInside((x, y)):
+                if self.is_inside((x, y)):
                     positions.append((x, y))
 
         return positions

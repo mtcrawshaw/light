@@ -17,10 +17,7 @@ class Circle(Shape):
         self.radius = radius
 
     def is_inside(self, pos: Tuple[int, int]) -> bool:
-        """
-        Returns True if `pos` is inside `self`, False otherwise. This function should be
-        overridden in subclasses.
-        """
+        """ Returns True if `pos` is inside `self`, False otherwise. """
 
         dist = sqrt((self.center[0] - pos[0]) ** 2 + (self.center[1] - pos[1]) ** 2)
         return dist <= self.radius
@@ -28,7 +25,6 @@ class Circle(Shape):
     def bounds(self) -> Tuple[Tuple[int, int], Tuple[int, int]]:
         """
         Returns coordinates of top left and bottom right of bounding box around `self`.
-        This function should be overridden in subclasses.
         """
 
         left = self.center[0] - self.radius
@@ -38,8 +34,6 @@ class Circle(Shape):
         return ((left, top), (right, bottom))
 
     def area(self) -> float:
-        """
-        Returns the area of `self`. This function should be overridden in subclasses.
-        """
+        """ Returns the area of `self`. """
 
         return pi * self.radius ** 2

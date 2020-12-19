@@ -25,7 +25,9 @@ def main(args: argparse.Namespace):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", type=str, help="What to run. Options: ['gan', 'mosaic'].")
+    parser.add_argument(
+        "command", type=str, help="What to run. Options: ['gan', 'mosaic']."
+    )
     parser.add_argument("config_path", type=str, help="Path to config file.")
     args = parser.parse_args()
     main(args)

@@ -72,12 +72,12 @@ Done:
 Add mosaic command to main
 Shape (everything except partition)
 Circle
-
-In progress:
 Triangle
 
-To do:
+In progress:
 Square
+
+To do:
 Shape (partition)
 Canvas
 Runner

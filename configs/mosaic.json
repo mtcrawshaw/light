@@ -1,6 +1,10 @@
 {
     "image_path": "data/flowers/daisy/10172379554_b296050f82_n.jpg",
-    "max_child_area": 0.67,
-    "num_splits": 1000,
-    "seed": 1
+
+    "max_child_area": 0.75,
+    "num_splits": 100,
+    "num_samples": 100,
+
+    "seed": 1,
+    "save_name": "test"
 }

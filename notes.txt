@@ -76,13 +76,13 @@ Circle
 Triangle
 Square
 Shape (partition)
+Canvas (partition)
+Runner
 
 In progress:
-Canvas (partition)
+Canvas (color)
 
 To do:
-Runner
-Canvas (color)
 Improve quality and performance
 
 

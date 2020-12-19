@@ -1,3 +1,6 @@
+""" Create a gradient-colored mosaic from an image. """
+
+
 from typing import Dict, Any
 
 

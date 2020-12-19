@@ -158,8 +158,13 @@ def train_gan(config: Dict[str, Any]):
     fig_len = ceil(sqrt(NUM_FIXED_LATENTS))
     fig = plt.figure(figsize=(fig_len, fig_len))
     plt.axis("off")
-    imgs = [[plt.imshow(np.transpose(img, (1, 2, 0)), animated=True)] for img in generated_imgs]
-    ani = animation.ArtistAnimation(fig, imgs, interval=1000, repeat_delay=1000, blit=True)
+    imgs = [
+        [plt.imshow(np.transpose(img, (1, 2, 0)), animated=True)]
+        for img in generated_imgs
+    ]
+    ani = animation.ArtistAnimation(
+        fig, imgs, interval=1000, repeat_delay=1000, blit=True
+    )
     plt.show()
 
 

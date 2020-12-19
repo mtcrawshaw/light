@@ -4,7 +4,7 @@ import argparse
 import json
 
 from light.gan import train_gan
-from light.mosaic import create_mosaic
+from light.mosaic.mosaic import create_mosaic
 
 
 def main(args: argparse.Namespace):

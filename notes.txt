@@ -32,6 +32,7 @@ Architecture:
 Canvas (image, max_child_area, num_splits)
     self.num_splits: int
     self.max_child_area: float
+    self.num_samples: int
     self.area: Shape
     partition(self) -> None: (affects self.area)
     color(self) -> Image:
@@ -77,10 +78,11 @@ Square
 Shape (partition)
 
 In progress:
-Canvas
+Canvas (partition)
 
 To do:
 Runner
+Canvas (color)
 Improve quality and performance
 
 

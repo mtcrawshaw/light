@@ -1,18 +1,21 @@
 """ Definition of Circle object used as a piece of a mosaic. """
 
+import random
 from math import sqrt, pi
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Any
 
-from light.mosaic.shape import Shape
+from light.mosaic import Shape
 
 
 class Circle(Shape):
     """ A piece of a mosaic with a circle shape. """
 
-    def __init__(self, center: Tuple[int, int], radius: int) -> None:
+    def __init__(
+        self, center: Tuple[int, int], radius: int, **kwargs: Dict[str, Any]
+    ) -> None:
         """ Init function for Circle. """
 
-        super().__init__()
+        super().__init__(**kwargs)
         self.center = center
         self.radius = radius
 
@@ -37,3 +40,29 @@ class Circle(Shape):
         """ Returns the area of `self`. """
 
         return pi * self.radius ** 2
+
+    @classmethod
+    def sample_inside(cls, shape: Shape) -> "Circle":
+        """
+        Return a randomly sampled instance of `Circle` that lies inside `shape` and
+        doesn't overlap any children of `shape`.
+        """
+
+        valid_positions = shape.unique_inside_positions()
+
+        valid = False
+        while not valid:
+            center = random.choice(valid_positions)
+            dist = lambda a, b: sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
+            max_radius = max(dist(center, pos) for pos in valid_positions)
+            radius = random.choice(range(1, int(max_radius)))
+
+            circle = cls(
+                center,
+                radius,
+                max_child_area=shape.max_child_area,
+                num_samples=shape.num_samples,
+            )
+            valid = all(pos in valid_positions for pos in circle.inside_positions())
+
+        return circle

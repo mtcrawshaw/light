@@ -1,19 +1,22 @@
 """ Definition of Triangle object used as a piece of a mosaic. """
 
-from typing import List, Tuple
+import random
+from typing import List, Tuple, Dict, Any
 
-from light.mosaic.shape import Shape
+from light.mosaic import Shape
 
 
 class Triangle(Shape):
     """ A piece of a mosaic with a triangle shape. """
 
     def __init__(
-        self, vertices: Tuple[Tuple[int, int], Tuple[int, int], Tuple[int, int]]
+        self,
+        vertices: Tuple[Tuple[int, int], Tuple[int, int], Tuple[int, int]],
+        **kwargs: Dict[str, Any]
     ) -> None:
         """ Init function for Triangle. """
 
-        super().__init__()
+        super().__init__(**kwargs)
         self.vertices = vertices
         self.num_vertices = 3
 
@@ -44,3 +47,28 @@ class Triangle(Shape):
 
         (ax, ay), (bx, by), (cx, cy) = self.vertices
         return abs(ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)) / 2.0
+
+    @classmethod
+    def sample_inside(cls, shape: Shape) -> "Triangle":
+        """
+        Return a randomly sampled instance of `Triangle` that lies inside `shape` and
+        doesn't overlap any children of `shape`.
+        """
+
+        valid_positions = shape.unique_inside_positions()
+
+        valid = False
+        while not valid:
+            vertices = tuple(random.sample(valid_positions, 3))
+            (ax, ay), (bx, by), (cx, cy) = vertices
+            if (by - cy) * (ax - cx) + (cx - bx) * (ay - cy) == 0:
+                continue
+
+            tri = cls(
+                vertices,
+                max_child_area=shape.max_child_area,
+                num_samples=shape.num_samples,
+            )
+            valid = all(pos in valid_positions for pos in tri.inside_positions())
+
+        return tri

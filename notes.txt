@@ -74,13 +74,14 @@ Shape (everything except partition)
 Circle
 Triangle
 Square
-
-In progress:
 Shape (partition)
 
-To do:
+In progress:
 Canvas
+
+To do:
 Runner
+Improve quality and performance
 
 
 ----------------------------------------------------------------------------------------

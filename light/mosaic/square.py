@@ -28,6 +28,15 @@ class Square(Shape):
         ((left, top), (right, bottom)) = (self.top_left, self.bottom_right)
         return left <= pos[0] <= right and top <= pos[0] <= bottom
 
+    def is_boundary(self, pos: Tuple[int, int]) -> bool:
+        """ Returns True if `pos` is on the boundary of `self`, False otherwise. """
+
+        left = abs(pos[0] - self.top_left[0]) <= self.boundary_width
+        top = abs(pos[1] - self.top_left[1]) <= self.boundary_width
+        right = abs(pos[0] - self.bottom_right[0]) <= self.boundary_width
+        bottom = abs(pos[1] - self.bottom_right[1]) <= self.boundary_width
+        return (left or top or right or bottom)
+
     def bounds(self) -> Tuple[Tuple[int, int], Tuple[int, int]]:
         """
         Returns coordinates of top left and bottom right of bounding box around `self`.
@@ -64,6 +73,7 @@ class Square(Shape):
                 bottom_right,
                 max_child_area=shape.max_child_area,
                 num_samples=shape.num_samples,
+                boundary_width=shape.boundary_width,
             )
             valid = all(pos in valid_positions for pos in square.inside_positions())
 

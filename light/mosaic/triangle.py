@@ -1,5 +1,6 @@
 """ Definition of Triangle object used as a piece of a mosaic. """
 
+from math import sqrt
 import random
 from typing import List, Tuple, Dict, Any
 
@@ -30,6 +31,33 @@ class Triangle(Shape):
         beta = ((cy - ay) * (px - cx) + (ax - cx) * (py - cy)) / denom
         gamma = 1.0 - alpha - beta
         return alpha >= 0 and beta >= 0 and gamma >= 0
+
+    def is_boundary(self, pos: Tuple[int, int]) -> bool:
+        """ Returns True if `pos` is on the boundary of `self`, False otherwise. """
+
+        def is_between(v1: Tuple[int, int], v2: Tuple[int, int], p: Tuple[int, int]) -> bool:
+            """ Returns True if `p` is between `v1` and `v2`, and False otherwise. """
+
+            A = (v2[1] - v1[1]) / (v2[0] - v1[0])
+            B = -1
+            C = -v1[0] * (v2[1] - v1[1]) / (v2[0] - v1[0]) + v1[1]
+
+            proj_x = (B * (B * p[0] - A * p[1]) - A * C) / (A ** 2 + B ** 2)
+            proj_y = (A * (-B * p[0] + A * p[1]) - B * C) / (A ** 2 + B ** 2)
+            proj = (proj_x, proj_y)
+
+            proj_x_between = (v1[0] <= proj[0] <= v2[0]) or (v2[0] <= proj[0] <= v1[0])
+            proj_y_between = (v1[1] <= proj[1] <= v2[1]) or (v2[1] <= proj[1] <= v1[1])
+            if not (proj_x_between and proj_y_between):
+                return False
+
+            dist = sqrt((proj[0] - p[0]) ** 2 + (proj[1] - p[1]) ** 2)
+            return dist <= self.boundary_width
+
+        side0 = is_between(self.vertices[0], self.vertices[1], pos)
+        side1 = is_between(self.vertices[0], self.vertices[2], pos)
+        side2 = is_between(self.vertices[1], self.vertices[2], pos)
+        return side0 or side1 or side2
 
     def bounds(self) -> Tuple[Tuple[int, int], Tuple[int, int]]:
         """
@@ -68,6 +96,7 @@ class Triangle(Shape):
                 vertices,
                 max_child_area=shape.max_child_area,
                 num_samples=shape.num_samples,
+                boundary_width=shape.boundary_width,
             )
             valid = all(pos in valid_positions for pos in tri.inside_positions())
 

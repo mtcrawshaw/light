@@ -10,11 +10,12 @@ class Shape:
     down. This is an abstract class and shouldn't be instantiated.
     """
 
-    def __init__(self, max_child_area: float = 0.7, num_samples: int = 100) -> None:
+    def __init__(self, max_child_area: float = 0.7, num_samples: int = 100, boundary_width: int = 3) -> None:
         """ Init function for Shape. """
 
         self.max_child_area = max_child_area
         self.num_samples = num_samples
+        self.boundary_width = boundary_width
         self.children: List["Shape"] = []
 
     def partition(self, shape_cls) -> None:
@@ -80,10 +81,32 @@ class Shape:
 
         return unique_positions
 
+    def boundary_positions(self) -> List[Tuple[int, int]]:
+        """
+        Return all positions on the boundary of `self`.
+        """
+
+        positions: List[Tuple[int, int]] = []
+        (left, top), (right, bottom) = self.bounds()
+        for x in range(left, right + 1):
+            for y in range(top, bottom + 1):
+                if self.is_boundary((x, y)):
+                    positions.append((x, y))
+
+        return positions
+
     def is_inside(self, pos: Tuple[int, int]) -> bool:
         """
         Returns True if `pos` is inside `self`, False otherwise. This function should be
         overridden in subclasses.
+        """
+
+        raise NotImplementedError
+
+    def is_boundary(self, pos: Tuple[int, int]) -> bool:
+        """
+        Returns True if `pos` is on the boundary of `self`, False otherwise. This
+        function should be overridden in subclasses.
         """
 
         raise NotImplementedError

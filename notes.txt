@@ -85,6 +85,9 @@ Canvas (color)
 To do:
 Improve quality and performance
 
+Notes for improving quality:
+- Write check for overlap between shapes analytically instead of checking each position
+- Generate child by choosing points on the boundary of parent
 
 ----------------------------------------------------------------------------------------
 

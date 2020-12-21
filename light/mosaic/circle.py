@@ -25,6 +25,12 @@ class Circle(Shape):
         dist = sqrt((self.center[0] - pos[0]) ** 2 + (self.center[1] - pos[1]) ** 2)
         return dist <= self.radius
 
+    def is_boundary(self, pos: Tuple[int, int]) -> bool:
+        """ Returns True if `pos` is on the boundary of `self`, False otherwise. """
+
+        dist = sqrt((self.center[0] - pos[0]) ** 2 + (self.center[1] - pos[1]) ** 2)
+        return abs(dist - self.radius) <= self.boundary_width
+
     def bounds(self) -> Tuple[Tuple[int, int], Tuple[int, int]]:
         """
         Returns coordinates of top left and bottom right of bounding box around `self`.
@@ -62,6 +68,7 @@ class Circle(Shape):
                 radius,
                 max_child_area=shape.max_child_area,
                 num_samples=shape.num_samples,
+                boundary_width=shape.boundary_width,
             )
             valid = all(pos in valid_positions for pos in circle.inside_positions())
 

@@ -1,0 +1,10 @@
+{
+    "image_path": "data/small_test.jpg",
+
+    "max_child_area": 0.75,
+    "num_splits": 5,
+    "num_samples": 100,
+
+    "seed": 1,
+    "save_name": "small_test"
+}

@@ -8,7 +8,7 @@ from typing import Dict, Any
 
 from PIL import Image
 
-from light.mosaic import Canvas
+from light.mosaic import Canvas, Circle, Triangle, Square
 
 
 def create_mosaic(config: Dict[str, Any]) -> None:
@@ -23,6 +23,7 @@ def create_mosaic(config: Dict[str, Any]) -> None:
                 "Results directory '%s' already exists! Save names must be unique."
                 % save_dir
             )
+            exit()
         else:
             os.makedirs(save_dir)
 
@@ -31,8 +32,13 @@ def create_mosaic(config: Dict[str, Any]) -> None:
 
     # Read in image, instantiate canvas, partition and color canvas.
     image = Image.open(config["image_path"])
-    canvas = Canvas(image, config["num_splits"], config["max_child_area"], config["num_samples"])
-    # canvas.partition()
+    canvas = Canvas(
+        image,
+        config["num_splits"],
+        config["max_child_area"],
+        config["num_samples"]
+    )
+    canvas.partition()
     mosaic = canvas.color()
 
     # Save out results.

@@ -86,10 +86,10 @@ Improve quality and performance
 To do:
 
 Notes for improving performance/quality:
-- Generate child by choosing points on the boundary of parent
-- Print statements at each step + timing each step
 - Parallelize child sampling process
 - Write check for overlap between shapes analytically instead of checking each position
+- Only use triangles and circles so we don't have to worry about intersection and we can
+  always generate maximal children
 
 ----------------------------------------------------------------------------------------
 

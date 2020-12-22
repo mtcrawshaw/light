@@ -41,7 +41,8 @@ class Canvas:
     def partition(self) -> None:
         """ Partition canvas into `self.num_splits` pieces. """
 
-        for _ in range(self.num_splits):
+        for i in range(self.num_splits):
+            print("Partitioning %d/%d" % (i + 1, self.num_splits))
             all_pieces = self.area.descendants()
             split_piece = random.choice(all_pieces)
             piece_type = random.choice(PIECE_TYPES)

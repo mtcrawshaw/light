@@ -21,6 +21,11 @@ class Triangle(Shape):
         self.vertices = vertices
         self.num_vertices = 3
 
+    def __str__(self) -> str:
+        """ Returns a string representation of `self`. """
+
+        return "Vertices: %s" % str(self.vertices)
+
     def is_inside(self, pos: Tuple[int, int]) -> bool:
         """ Returns True if `pos` is inside `self`, False otherwise. """
 
@@ -88,7 +93,12 @@ class Triangle(Shape):
         """
 
         valid = False
+        tries = 0
+
         while not valid:
+            tries += 1
+            print("    Sample attempt %d" % tries)
+
             vertices = tuple(random.sample(valid_positions, 3))
             (ax, ay), (bx, by), (cx, cy) = vertices
             if (by - cy) * (ax - cx) + (cx - bx) * (ay - cy) == 0:

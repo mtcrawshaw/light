@@ -29,12 +29,14 @@ class Shape:
         biggest_child = None
         biggest_child_area = None
         valid_positions = self.unique_inside_positions()
-        for _ in range(self.num_samples):
+        parent_area = self.area()
+        for sample in range(self.num_samples):
+            print("  Sampling %d/%d" % (sample + 1, self.num_samples))
             candidate = shape_cls.sample_inside(self, valid_positions)
             area = candidate.area()
             if (
                 biggest_child_area is None
-                or biggest_child_area <= area <= self.max_child_area
+                or biggest_child_area <= area <= self.max_child_area * parent_area
             ):
                 biggest_child = candidate
                 biggest_child_area = area

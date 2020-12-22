@@ -18,9 +18,14 @@ class Square(Shape):
     ) -> None:
         """ Init function for Square. """
 
-        super().__init__()
+        super().__init__(**kwargs)
         self.top_left = top_left
         self.bottom_right = bottom_right
+
+    def __str__(self) -> str:
+        """ Returns a string representation of `self`. """
+
+        return "Top left, bottom right: %s, %s" % (self.top_left, self.bottom_right)
 
     def is_inside(self, pos: Tuple[int, int]) -> bool:
         """ Returns True if `pos` is inside `self`, False otherwise. """
@@ -60,9 +65,14 @@ class Square(Shape):
         """
 
         valid = False
+        dist = lambda a, b: sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
+        tries = 0
+
         while not valid:
+            tries += 1
+            print("    Sample attempt %d" % tries)
+
             center = random.choice(valid_positions)
-            dist = lambda a, b: sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
             max_radius = max(dist(center, pos) for pos in valid_positions)
             radius = random.choice(range(1, int(max_radius)))
             top_left = (center[0] - radius, center[1] - radius)

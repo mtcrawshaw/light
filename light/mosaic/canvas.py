@@ -21,6 +21,7 @@ class Canvas:
         num_splits: int = 100,
         max_child_area: float = 0.7,
         num_samples: int = 100,
+        num_workers: int = 1,
         boundary_width: int = 3,
     ) -> None:
         """ Init function for Canvas. """
@@ -29,12 +30,14 @@ class Canvas:
         self.num_splits = num_splits
         self.max_child_area = max_child_area
         self.num_samples = num_samples
+        self.num_workers = num_workers
         self.boundary_width = boundary_width
         self.area = Square(
             (0, 0),
             (image.width, image.height),
             max_child_area=max_child_area,
             num_samples=num_samples,
+            num_workers=num_workers,
             boundary_width=boundary_width,
         )
 

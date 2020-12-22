@@ -1,5 +1,7 @@
 """ Definition of Shape object used as a piece of a mosaic. """
 
+import multiprocessing
+from multiprocessing import Process
 from typing import List, Tuple
 
 
@@ -14,6 +16,7 @@ class Shape:
         self,
         max_child_area: float = 0.7,
         num_samples: int = 100,
+        num_workers: int = 1,
         boundary_width: int = 3,
     ) -> None:
         """ Init function for Shape. """
@@ -21,18 +24,38 @@ class Shape:
         self.max_child_area = max_child_area
         self.num_samples = num_samples
         self.boundary_width = boundary_width
+        self.num_workers = num_workers
         self.children: List["Shape"] = []
 
     def partition(self, shape_cls) -> None:
         """ Add a single non-overlapping Shape to children. """
 
+        valid_positions = self.unique_inside_positions()
+
+        # Set up multi-processed sampling.
+        manager = multiprocessing.Manager()
+        sample_children = manager.list()
+
+        def worker():
+            samples_per_worker = max(self.num_samples // self.num_workers, 1)
+            for sample in range(samples_per_worker):
+                print("  Sample %d" % sample)
+                candidate = shape_cls.sample_inside(self, valid_positions)
+                sample_children.append(candidate)
+
+        # Perform sampling.
+        processes = []
+        for i in range(self.num_workers):
+            processes.append(Process(target=worker))
+            processes[i].start()
+        for i in range(self.num_workers):
+            processes[i].join()
+
+        # Find biggest child.
         biggest_child = None
         biggest_child_area = None
-        valid_positions = self.unique_inside_positions()
         parent_area = self.area()
-        for sample in range(self.num_samples):
-            print("  Sampling %d/%d" % (sample + 1, self.num_samples))
-            candidate = shape_cls.sample_inside(self, valid_positions)
+        for candidate in sample_children:
             area = candidate.area()
             if (
                 biggest_child_area is None

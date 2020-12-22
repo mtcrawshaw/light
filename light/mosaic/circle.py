@@ -78,6 +78,7 @@ class Circle(Shape):
                 radius,
                 max_child_area=shape.max_child_area,
                 num_samples=shape.num_samples,
+                num_workers=shape.num_workers,
                 boundary_width=shape.boundary_width,
             )
             valid = all(pos in valid_positions for pos in circle.inside_positions())

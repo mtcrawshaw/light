@@ -86,7 +86,6 @@ Improve quality and performance
 To do:
 
 Notes for improving performance/quality:
-- Parallelize child sampling process
 - Write check for overlap between shapes analytically instead of checking each position
 - Only use triangles and circles so we don't have to worry about intersection and we can
   always generate maximal children

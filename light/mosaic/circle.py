@@ -48,13 +48,13 @@ class Circle(Shape):
         return pi * self.radius ** 2
 
     @classmethod
-    def sample_inside(cls, shape: Shape) -> "Circle":
+    def sample_inside(
+        cls, shape: Shape, valid_positions: List[Tuple[int, int]]
+    ) -> "Circle":
         """
         Return a randomly sampled instance of `Circle` that lies inside `shape` and
         doesn't overlap any children of `shape`.
         """
-
-        valid_positions = shape.unique_inside_positions()
 
         valid = False
         while not valid:

@@ -85,10 +85,11 @@ Improve quality and performance
 
 To do:
 
-Notes for improving quality:
-- Break in check for validity of generated child positions
-- Write check for overlap between shapes analytically instead of checking each position
+Notes for improving performance/quality:
 - Generate child by choosing points on the boundary of parent
+- Print statements at each step + timing each step
+- Parallelize child sampling process
+- Write check for overlap between shapes analytically instead of checking each position
 
 ----------------------------------------------------------------------------------------
 

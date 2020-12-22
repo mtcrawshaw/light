@@ -28,8 +28,9 @@ class Shape:
 
         biggest_child = None
         biggest_child_area = None
+        valid_positions = self.unique_inside_positions()
         for _ in range(self.num_samples):
-            candidate = shape_cls.sample_inside(self)
+            candidate = shape_cls.sample_inside(self, valid_positions)
             area = candidate.area()
             if (
                 biggest_child_area is None
@@ -132,7 +133,9 @@ class Shape:
         raise NotImplementedError
 
     @classmethod
-    def sample_inside(cls, shape: "Shape") -> "Shape":
+    def sample_inside(
+        cls, shape: "Shape", valid_positions: List[Tuple[int, int]]
+    ) -> "Shape":
         """
         Return a randomly sampled instance of `Shape` that lies inside
         `shape.unique_inside_positions`. This function should be overridden in

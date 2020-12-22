@@ -79,13 +79,13 @@ class Triangle(Shape):
         return abs(ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)) / 2.0
 
     @classmethod
-    def sample_inside(cls, shape: Shape) -> "Triangle":
+    def sample_inside(
+        cls, shape: Shape, valid_positions: List[Tuple[int, int]]
+    ) -> "Triangle":
         """
         Return a randomly sampled instance of `Triangle` that lies inside `shape` and
         doesn't overlap any children of `shape`.
         """
-
-        valid_positions = shape.unique_inside_positions()
 
         valid = False
         while not valid:

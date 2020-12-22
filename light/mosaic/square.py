@@ -51,13 +51,13 @@ class Square(Shape):
         return (right - left) * (bottom - top)
 
     @classmethod
-    def sample_inside(cls, shape: Shape) -> "Square":
+    def sample_inside(
+        cls, shape: Shape, valid_positions: List[Tuple[int, int]]
+    ) -> "Square":
         """
         Return a randomly sampled instance of `Square` that lies inside `shape` and
         doesn't overlap any children of `shape`.
         """
-
-        valid_positions = shape.unique_inside_positions()
 
         valid = False
         while not valid:

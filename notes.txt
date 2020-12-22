@@ -78,14 +78,15 @@ Square
 Shape (partition)
 Canvas (partition)
 Runner
-
-In progress:
 Canvas (color)
 
-To do:
+In progress:
 Improve quality and performance
 
+To do:
+
 Notes for improving quality:
+- Break in check for validity of generated child positions
 - Write check for overlap between shapes analytically instead of checking each position
 - Generate child by choosing points on the boundary of parent
 

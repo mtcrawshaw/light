@@ -2,7 +2,9 @@
 
 import random
 
+import numpy as np
 from PIL import Image
+from sklearn.linear_model import LinearRegression
 
 from light.mosaic import Circle, Triangle, Square
 
@@ -49,12 +51,36 @@ class Canvas:
         """ Color each piece of canvas with linear regression over original colors. """
 
         colored = Image.new(self.image.mode, self.image.size)
-
         pieces = self.area.descendants()
+
+        valid_pos = lambda im, p: (0 <= p[0] < im.width) and (0 <= p[1] < im.height)
         for piece in pieces:
-            boundary = piece.boundary_positions()
-            for pos in boundary:
-                if 0 <= pos[0] < colored.width and 0 <= pos[1] < colored.height:
-                    colored.putpixel(pos, (255, 255, 255))
+
+            # Collect all positions in piece and their corresponding colors.
+            piece_positions = [
+                pos
+                for pos in piece.unique_inside_positions()
+                if valid_pos(self.image, pos)
+            ]
+            piece_pixels = np.array(
+                [self.image.getpixel(pos) for pos in piece_positions]
+            )
+            piece_positions = np.array(piece_positions)
+
+            # Perform linear regression on each channel.
+            regressors = []
+            for channel in range(3):
+                piece_channels = piece_pixels[:, channel]
+                regressor = LinearRegression().fit(piece_positions, piece_channels)
+                regressors.append(regressor)
+
+            # Set color for each position in piece as a function of regressor.
+            reds = np.expand_dims(regressors[0].predict(piece_positions), 1)
+            greens = np.expand_dims(regressors[1].predict(piece_positions), 1)
+            blues = np.expand_dims(regressors[2].predict(piece_positions), 1)
+            regressed_colors = np.concatenate([reds, greens, blues], axis=1)
+            regressed_colors = np.rint(regressed_colors).astype(int)
+            for i, pos in enumerate(piece_positions):
+                colored.putpixel(pos, tuple(regressed_colors[i]))
 
         return colored

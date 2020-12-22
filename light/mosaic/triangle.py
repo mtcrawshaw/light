@@ -35,7 +35,9 @@ class Triangle(Shape):
     def is_boundary(self, pos: Tuple[int, int]) -> bool:
         """ Returns True if `pos` is on the boundary of `self`, False otherwise. """
 
-        def is_between(v1: Tuple[int, int], v2: Tuple[int, int], p: Tuple[int, int]) -> bool:
+        def is_between(
+            v1: Tuple[int, int], v2: Tuple[int, int], p: Tuple[int, int]
+        ) -> bool:
             """ Returns True if `p` is between `v1` and `v2`, and False otherwise. """
 
             A = (v2[1] - v1[1]) / (v2[0] - v1[0])

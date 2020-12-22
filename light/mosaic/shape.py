@@ -10,7 +10,12 @@ class Shape:
     down. This is an abstract class and shouldn't be instantiated.
     """
 
-    def __init__(self, max_child_area: float = 0.7, num_samples: int = 100, boundary_width: int = 3) -> None:
+    def __init__(
+        self,
+        max_child_area: float = 0.7,
+        num_samples: int = 100,
+        boundary_width: int = 3,
+    ) -> None:
         """ Init function for Shape. """
 
         self.max_child_area = max_child_area

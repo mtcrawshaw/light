@@ -33,10 +33,7 @@ def create_mosaic(config: Dict[str, Any]) -> None:
     # Read in image, instantiate canvas, partition and color canvas.
     image = Image.open(config["image_path"])
     canvas = Canvas(
-        image,
-        config["num_splits"],
-        config["max_child_area"],
-        config["num_samples"]
+        image, config["num_splits"], config["max_child_area"], config["num_samples"]
     )
     canvas.partition()
     mosaic = canvas.color()
@@ -51,8 +48,10 @@ def create_mosaic(config: Dict[str, Any]) -> None:
 
         # Save original image.
         dot_pos = config["image_path"].rfind(".")
-        image_ext = config["image_path"][dot_pos + 1:]
-        image_path = os.path.join(save_dir, "%s_image.%s" % (config["save_name"], image_ext))
+        image_ext = config["image_path"][dot_pos + 1 :]
+        image_path = os.path.join(
+            save_dir, "%s_image.%s" % (config["save_name"], image_ext)
+        )
         image.save(image_path)
 
         # Save canvas.
@@ -61,5 +60,7 @@ def create_mosaic(config: Dict[str, Any]) -> None:
             pickle.dump(canvas, canvas_file)
 
         # Save mosaic.
-        mosaic_path = os.path.join(save_dir, "%s_mosaic.%s" % (config["save_name"], image_ext))
+        mosaic_path = os.path.join(
+            save_dir, "%s_mosaic.%s" % (config["save_name"], image_ext)
+        )
         mosaic.save(mosaic_path)

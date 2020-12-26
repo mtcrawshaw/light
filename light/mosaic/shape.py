@@ -27,6 +27,13 @@ class Shape:
         self.num_workers = num_workers
         self.children: List["Shape"] = []
 
+        # This is a dictionay that holds cached results from function calls to this
+        # class, namely `inside_positions()`, `unique_inside_positions()`, and
+        # `boundary_positions()`. We have to be careful here: any time that the class
+        # data changes in a way that affects the result of these function calls, the
+        # corresponding cached result needs to be deleted from `self.cache`.
+        self.cache = {}
+
     def partition(self, shape_cls) -> None:
         """ Add a single non-overlapping Shape to children. """
 
@@ -85,6 +92,9 @@ class Shape:
         boundaries of `self`.
         """
 
+        if "inside_positions" in self.cache:
+            return self.cache["inside_positions"]
+
         positions: List[Tuple[int, int]] = []
         (left, top), (right, bottom) = self.bounds()
         for x in range(left, right + 1):
@@ -92,6 +102,7 @@ class Shape:
                 if self.is_inside((x, y)):
                     positions.append((x, y))
 
+        self.cache["inside_positions"] = list(positions)
         return positions
 
     def unique_inside_positions(self) -> List[Tuple[int, int]]:
@@ -99,6 +110,9 @@ class Shape:
         Returns a list of all positions inside `self` which aren't inside of any
         children of `self.`.
         """
+
+        if "unique_inside_positions" in self.cache:
+            return self.cache["unique_inside_positions"]
 
         positions: List[Tuple[int, int]] = self.inside_positions()
         child_positions: List[Tuple[int, int]] = []
@@ -110,12 +124,16 @@ class Shape:
             if position not in child_positions:
                 unique_positions.append(position)
 
+        self.cache["unique_inside_positions"] = list(unique_positions)
         return unique_positions
 
     def boundary_positions(self) -> List[Tuple[int, int]]:
         """
         Return all positions on the boundary of `self`.
         """
+
+        if "boundary_positions" in self.cache:
+            return self.cache["boundary_positions"]
 
         positions: List[Tuple[int, int]] = []
         (left, top), (right, bottom) = self.bounds()
@@ -124,6 +142,7 @@ class Shape:
                 if self.is_boundary((x, y)):
                     positions.append((x, y))
 
+        self.cache["boundary_positions"] = list(positions)
         return positions
 
     def is_inside(self, pos: Tuple[int, int]) -> bool:

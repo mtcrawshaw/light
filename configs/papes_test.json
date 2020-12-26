@@ -1,0 +1,11 @@
+{
+    "image_path": null,
+
+    "max_child_area": 0.75,
+    "num_splits": 7,
+    "num_samples": 120,
+    "num_workers": 12,
+
+    "seed": 0,
+    "save_name": "papes_test"
+}

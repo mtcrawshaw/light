@@ -104,11 +104,7 @@ into triangles. This way all of the computations involved will be much, much fas
 allowing for mosaic generation on high resolution images in no time.
 
 Additions:
-- Enforce a constant depth of the recursion tree, or some constraint on the variation of
-  heights in the recursive tree. One way to do this is to make the probability of a
-  piece being chosen for split inversely proportional to its depth or its area.
 - Fix aliasing of triangle boundaries and black specks
-- Parallelize partitioning of siblings?
 
 
 ----------------------------------------------------------------------------------------

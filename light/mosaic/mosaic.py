@@ -33,11 +33,7 @@ def create_mosaic(config: Dict[str, Any]) -> None:
     # Read in image, instantiate canvas, partition and color canvas.
     image = Image.open(config["image_path"])
     canvas = Canvas(
-        image=image,
-        num_splits=config["num_splits"],
-        uniformity=config["uniformity"],
-        num_workers=config["num_workers"],
-        boundary_width=config["boundary_width"],
+        image=image, num_splits=config["num_splits"], uniformity=config["uniformity"],
     )
     canvas.partition()
     mosaic = canvas.color()

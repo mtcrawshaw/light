@@ -13,20 +13,13 @@ class Canvas:
     """ Main object used to create a mosaic. """
 
     def __init__(
-        self,
-        image: Image,
-        num_splits: int = 100,
-        uniformity: float = 1.0,
-        num_workers: int = 1,
-        boundary_width: int = 3,
+        self, image: Image, num_splits: int = 100, uniformity: float = 1.0,
     ) -> None:
         """ Init function for Canvas. """
 
         self.image = image
         self.num_splits = num_splits
         self.uniformity = uniformity
-        self.num_workers = num_workers
-        self.boundary_width = boundary_width
         self.pieces = []
 
     def partition(self) -> None:
@@ -76,7 +69,8 @@ class Canvas:
             print("Split %d" % i)
 
             # Sample a piece and split it.
-            split_piece = random.choice(self.pieces)
+            weights = [piece.area() for piece in self.pieces]
+            split_piece = random.choices(self.pieces, weights=weights)[0]
             new_pieces = split_piece.partition(self.uniformity)
 
             # Add resulting pieces to total list and remove sampled piece.

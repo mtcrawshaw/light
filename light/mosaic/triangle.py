@@ -94,3 +94,9 @@ class Triangle:
         right = max(self._vertices[i][0] for i in range(self.num_vertices))
         bottom = max(self._vertices[i][1] for i in range(self.num_vertices))
         return ((left, top), (right, bottom))
+
+    def area(self) -> float:
+        """ Returns the area of `self`. """
+
+        (ax, ay), (bx, by), (cx, cy) = self._vertices
+        return abs(ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)) / 2.0

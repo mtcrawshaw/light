@@ -1,35 +1,82 @@
 """ Definition of Triangle object used as a piece of a mosaic. """
 
-from math import sqrt
 import random
+
 from typing import List, Tuple, Dict, Any
 
-from light.mosaic import Shape
 
-
-class Triangle(Shape):
-    """ A piece of a mosaic with a triangle shape. """
+class Triangle:
+    """ A piece of a mosaic with a triangle shape.  """
 
     def __init__(
-        self,
-        vertices: Tuple[Tuple[int, int], Tuple[int, int], Tuple[int, int]],
-        **kwargs: Dict[str, Any]
+        self, vertices: Tuple[Tuple[int, int], Tuple[int, int], Tuple[int, int]],
     ) -> None:
         """ Init function for Triangle. """
 
-        super().__init__(**kwargs)
-        self.vertices = vertices
-        self.num_vertices = 3
+        assert len(vertices) == 3
+        self._vertices = vertices
+        self.num_vertices = len(self._vertices)
 
-    def __str__(self) -> str:
-        """ Returns a string representation of `self`. """
+        # This is a cache used to hold results of function calls that will never change,
+        # which we use to avoid redundant computation.
+        self._cache = {}
 
-        return "Vertices: %s" % str(self.vertices)
+    def partition(self, uniformity) -> List["Triangle"]:
+        """
+        Partition `self` into four smaller Triangles, and return these four new
+        Triangles in a list.
+        """
+
+        alpha_min = 0.5 - (1.0 - uniformity) / 2.0
+        alpha_max = 0.5 + (1.0 - uniformity) / 2.0
+
+        # Generate points near midpoint of each edge of `self`.
+        midpoints = []
+        for i in range(self.num_vertices):
+            alpha = random.uniform(alpha_min, alpha_max)
+            v1 = self._vertices[i]
+            v2 = self._vertices[(i + 1) % self.num_vertices]
+
+            m = (
+                round(v1[0] * alpha + v2[0] * (1 - alpha)),
+                round(v1[1] * alpha + v2[1] * (1 - alpha)),
+            )
+            midpoints.append(m)
+
+        # Generate four triangles from original vertices and new midpoints.
+        tri_vertices = [
+            (midpoints[0], midpoints[1], midpoints[2]),
+            (self._vertices[0], midpoints[0], midpoints[2]),
+            (self._vertices[1], midpoints[1], midpoints[0]),
+            (self._vertices[2], midpoints[2], midpoints[1]),
+        ]
+        split_pieces = [Triangle(v) for v in tri_vertices]
+
+        return split_pieces
+
+    def inside_positions(self) -> List[Tuple[int, int]]:
+        """
+        Returns a list of all positions inside `self`. We define inside to include the
+        boundaries of `self`.
+        """
+
+        if "inside_positions" in self._cache:
+            return self._cache["inside_positions"]
+
+        positions: List[Tuple[int, int]] = []
+        (left, top), (right, bottom) = self.bounds()
+        for x in range(left, right + 1):
+            for y in range(top, bottom + 1):
+                if self.is_inside((x, y)):
+                    positions.append((x, y))
+
+        self._cache["inside_positions"] = list(positions)
+        return positions
 
     def is_inside(self, pos: Tuple[int, int]) -> bool:
         """ Returns True if `pos` is inside `self`, False otherwise. """
 
-        (ax, ay), (bx, by), (cx, cy) = self.vertices
+        (ax, ay), (bx, by), (cx, cy) = self._vertices
         px, py = pos
         denom = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy)
         alpha = ((by - cy) * (px - cx) + (cx - bx) * (py - cy)) / denom
@@ -37,80 +84,13 @@ class Triangle(Shape):
         gamma = 1.0 - alpha - beta
         return alpha >= 0 and beta >= 0 and gamma >= 0
 
-    def is_boundary(self, pos: Tuple[int, int]) -> bool:
-        """ Returns True if `pos` is on the boundary of `self`, False otherwise. """
-
-        def is_between(
-            v1: Tuple[int, int], v2: Tuple[int, int], p: Tuple[int, int]
-        ) -> bool:
-            """ Returns True if `p` is between `v1` and `v2`, and False otherwise. """
-
-            A = (v2[1] - v1[1]) / (v2[0] - v1[0])
-            B = -1
-            C = -v1[0] * (v2[1] - v1[1]) / (v2[0] - v1[0]) + v1[1]
-
-            proj_x = (B * (B * p[0] - A * p[1]) - A * C) / (A ** 2 + B ** 2)
-            proj_y = (A * (-B * p[0] + A * p[1]) - B * C) / (A ** 2 + B ** 2)
-            proj = (proj_x, proj_y)
-
-            proj_x_between = (v1[0] <= proj[0] <= v2[0]) or (v2[0] <= proj[0] <= v1[0])
-            proj_y_between = (v1[1] <= proj[1] <= v2[1]) or (v2[1] <= proj[1] <= v1[1])
-            if not (proj_x_between and proj_y_between):
-                return False
-
-            dist = sqrt((proj[0] - p[0]) ** 2 + (proj[1] - p[1]) ** 2)
-            return dist <= self.boundary_width
-
-        side0 = is_between(self.vertices[0], self.vertices[1], pos)
-        side1 = is_between(self.vertices[0], self.vertices[2], pos)
-        side2 = is_between(self.vertices[1], self.vertices[2], pos)
-        return side0 or side1 or side2
-
     def bounds(self) -> Tuple[Tuple[int, int], Tuple[int, int]]:
         """
         Returns coordinates of top left and bottom right of bounding box around `self`.
         """
 
-        left = min(self.vertices[i][0] for i in range(self.num_vertices))
-        top = min(self.vertices[i][1] for i in range(self.num_vertices))
-        right = max(self.vertices[i][0] for i in range(self.num_vertices))
-        bottom = max(self.vertices[i][1] for i in range(self.num_vertices))
+        left = min(self._vertices[i][0] for i in range(self.num_vertices))
+        top = min(self._vertices[i][1] for i in range(self.num_vertices))
+        right = max(self._vertices[i][0] for i in range(self.num_vertices))
+        bottom = max(self._vertices[i][1] for i in range(self.num_vertices))
         return ((left, top), (right, bottom))
-
-    def area(self) -> float:
-        """ Returns the area of `self`. """
-
-        (ax, ay), (bx, by), (cx, cy) = self.vertices
-        return abs(ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)) / 2.0
-
-    @classmethod
-    def sample_inside(
-        cls, shape: Shape, valid_positions: List[Tuple[int, int]]
-    ) -> "Triangle":
-        """
-        Return a randomly sampled instance of `Triangle` that lies inside `shape` and
-        doesn't overlap any children of `shape`.
-        """
-
-        valid = False
-        tries = 0
-
-        while not valid:
-            tries += 1
-            print("    Sample attempt %d" % tries)
-
-            vertices = tuple(random.sample(valid_positions, 3))
-            (ax, ay), (bx, by), (cx, cy) = vertices
-            if (by - cy) * (ax - cx) + (cx - bx) * (ay - cy) == 0:
-                continue
-
-            tri = cls(
-                vertices,
-                max_child_area=shape.max_child_area,
-                num_samples=shape.num_samples,
-                num_workers=shape.num_workers,
-                boundary_width=shape.boundary_width,
-            )
-            valid = all(pos in valid_positions for pos in tri.inside_positions())
-
-        return tri

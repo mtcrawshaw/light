@@ -1,0 +1,11 @@
+{
+    "image_path": "data/big_test.png",
+
+    "num_splits": 25,
+    "uniformity": 0.333,
+    "boundary_width": 3,
+    "num_workers": 12,
+
+    "seed": 1,
+    "save_name": "big_test"
+}

@@ -6,10 +6,7 @@ import numpy as np
 from PIL import Image
 from sklearn.linear_model import LinearRegression
 
-from light.mosaic import Circle, Triangle, Square
-
-
-PIECE_TYPES = [Circle, Triangle, Square]
+from light.mosaic import Triangle
 
 
 class Canvas:
@@ -19,8 +16,7 @@ class Canvas:
         self,
         image: Image,
         num_splits: int = 100,
-        max_child_area: float = 0.7,
-        num_samples: int = 100,
+        uniformity: float = 1.0,
         num_workers: int = 1,
         boundary_width: int = 3,
     ) -> None:
@@ -28,43 +24,76 @@ class Canvas:
 
         self.image = image
         self.num_splits = num_splits
-        self.max_child_area = max_child_area
-        self.num_samples = num_samples
+        self.uniformity = uniformity
         self.num_workers = num_workers
         self.boundary_width = boundary_width
-        self.area = Square(
-            (0, 0),
-            (image.width, image.height),
-            max_child_area=max_child_area,
-            num_samples=num_samples,
-            num_workers=num_workers,
-            boundary_width=boundary_width,
-        )
+        self.pieces = []
 
     def partition(self) -> None:
         """ Partition canvas into `self.num_splits` pieces. """
 
+        alpha_min = 0.5 - (1.0 - self.uniformity) / 2.0
+        alpha_max = 0.5 + (1.0 - self.uniformity) / 2.0
+
+        # Sample initial triangle with one vertex in the image corner. We do this so
+        # that the image area is partitioned into only triangles after the initial
+        # triangle is sampled.
+        corners = [
+            (0, 0),
+            (self.image.width - 1, 0),
+            (self.image.width - 1, self.image.height - 1),
+            (0, self.image.height - 1),
+        ]
+        common = random.choice(range(len(corners)))
+        v0 = corners[common]
+        c1 = corners[(common + 1) % len(corners)]
+        c2 = corners[(common + 2) % len(corners)]
+        c3 = corners[(common + 3) % len(corners)]
+
+        # Sample points along edges opposite from common corner.
+        alpha1 = random.uniform(alpha_min, alpha_max)
+        v1 = (
+            round(c1[0] * alpha1 + c2[0] * (1 - alpha1)),
+            round(c1[1] * alpha1 + c2[1] * (1 - alpha1)),
+        )
+        alpha2 = random.uniform(alpha_min, alpha_max)
+        v2 = (
+            round(c2[0] * alpha2 + c3[0] * (1 - alpha2)),
+            round(c2[1] * alpha2 + c3[1] * (1 - alpha2)),
+        )
+
+        # Create triangles from image corners and sampled vertices.
+        self.pieces = [
+            Triangle(vertices=(v0, v1, v2)),
+            Triangle(vertices=(v0, c1, v1)),
+            Triangle(vertices=(v1, c2, v2)),
+            Triangle(vertices=(v0, v2, c3)),
+        ]
+
+        # Partition the existing triangles iteratively.
         for i in range(self.num_splits):
-            print("Partitioning %d/%d" % (i + 1, self.num_splits))
-            all_pieces = self.area.descendants()
-            split_piece = random.choice(all_pieces)
-            piece_type = random.choice(PIECE_TYPES)
-            split_piece.partition(piece_type)
+
+            print("Split %d" % i)
+
+            # Sample a piece and split it.
+            split_piece = random.choice(self.pieces)
+            new_pieces = split_piece.partition(self.uniformity)
+
+            # Add resulting pieces to total list and remove sampled piece.
+            self.pieces.remove(split_piece)
+            self.pieces += new_pieces
 
     def color(self) -> Image:
         """ Color each piece of canvas with linear regression over original colors. """
 
         colored = Image.new(self.image.mode, self.image.size)
-        pieces = self.area.descendants()
 
         valid_pos = lambda im, p: (0 <= p[0] < im.width) and (0 <= p[1] < im.height)
-        for piece in pieces:
+        for piece in self.pieces:
 
             # Collect all positions in piece and their corresponding colors.
             piece_positions = [
-                pos
-                for pos in piece.unique_inside_positions()
-                if valid_pos(self.image, pos)
+                pos for pos in piece.inside_positions() if valid_pos(self.image, pos)
             ]
             piece_pixels = np.array(
                 [self.image.getpixel(pos) for pos in piece_positions]

@@ -8,7 +8,7 @@ from typing import Dict, Any
 
 from PIL import Image
 
-from light.mosaic import Canvas, Circle, Triangle, Square
+from light.mosaic import Canvas
 
 
 def create_mosaic(config: Dict[str, Any]) -> None:
@@ -35,9 +35,9 @@ def create_mosaic(config: Dict[str, Any]) -> None:
     canvas = Canvas(
         image=image,
         num_splits=config["num_splits"],
-        max_child_area=config["max_child_area"],
-        num_samples=config["num_samples"],
+        uniformity=config["uniformity"],
         num_workers=config["num_workers"],
+        boundary_width=config["boundary_width"],
     )
     canvas.partition()
     mosaic = canvas.color()

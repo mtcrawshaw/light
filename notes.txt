@@ -24,7 +24,9 @@ Notes for current sprint/task:
   - Hyperparameter tuning
   - Newer GAN techniques
 
+
 ----------------------------------------------------------------------------------------
+
 
 Mosaic
 
@@ -90,6 +92,25 @@ Notes for improving performance/quality:
 - Only use triangles and circles so we don't have to worry about intersection and we can
   always generate maximal children
 
+
+----------------------------------------------------------------------------------------
+
+
+temp_mosaic branch:
+
+Making a new branch because I need to quickly tear down a lot of the original mosaic
+functionality. Plan is to modify the code so that we are only partitioning the image
+into triangles. This way all of the computations involved will be much, much faster,
+allowing for mosaic generation on high resolution images in no time.
+
+Additions:
+- Enforce a constant depth of the recursion tree, or some constraint on the variation of
+  heights in the recursive tree. One way to do this is to make the probability of a
+  piece being chosen for split inversely proportional to its depth or its area.
+- Fix aliasing of triangle boundaries and black specks
+- Parallelize partitioning of siblings?
+
+
 ----------------------------------------------------------------------------------------
 
 Future plans:
@@ -99,7 +120,9 @@ Refactoring:
 - Initialization options
 - Optimizer options
 
+
 ----------------------------------------------------------------------------------------
+
 
 Reading:
 
@@ -117,7 +140,9 @@ Reading:
 - Read through VAE literature (especially the recent NVAE)
 - Read distill.pub articles about image generation
 
+
 ----------------------------------------------------------------------------------------
+
 
 Misc:
 

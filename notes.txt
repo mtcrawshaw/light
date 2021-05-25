@@ -106,6 +106,10 @@ allowing for mosaic generation on high resolution images in no time.
 Additions:
 - Fix aliasing of triangle boundaries and black specks
 
+Thoughts from tests:
+- Should keep splits between 1000 and 5000. Try 2000, 3000, 4000
+- Range of uniformity could be a bit more centered. Try 0.3, 0.5, 0.7
+
 
 ----------------------------------------------------------------------------------------
 

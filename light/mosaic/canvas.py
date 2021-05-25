@@ -66,8 +66,6 @@ class Canvas:
         # Partition the existing triangles iteratively.
         for i in range(self.num_splits):
 
-            print("Split %d" % i)
-
             # Sample a piece and split it.
             weights = [piece.area() for piece in self.pieces]
             split_piece = random.choices(self.pieces, weights=weights)[0]

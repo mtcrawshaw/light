@@ -1,11 +1,9 @@
 {
-    "image_path": "data/flowers/daisy/10172379554_b296050f82_n.jpg",
+    "image_path": "data/flowers/daisy/100080576_f52e8ee070_n.jpg",
 
-    "max_child_area": 0.75,
-    "num_splits": 100,
-    "num_samples": 96,
-    "num_workers": 12,
+    "num_splits": 5000,
+    "uniformity": 0.6,
 
     "seed": 1,
-    "save_name": "test"
+    "save_name": null
 }

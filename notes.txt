@@ -103,12 +103,10 @@ functionality. Plan is to modify the code so that we are only partitioning the i
 into triangles. This way all of the computations involved will be much, much faster,
 allowing for mosaic generation on high resolution images in no time.
 
-Additions:
-- Fix aliasing of triangle boundaries and black specks
-
 Thoughts from tests:
-- Should keep splits between 1000 and 5000. Try 2000, 3000, 4000
-- Range of uniformity could be a bit more centered. Try 0.3, 0.5, 0.7
+- For number of splits, try 500, 1000, 2000
+- For uniformity, try 0.3, 0.5, 0.7
+- Can definitely run 8 workers next time
 
 
 ----------------------------------------------------------------------------------------

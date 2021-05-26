@@ -5,9 +5,9 @@ import glob
 
 
 TRIALS = 3
-NUM_SPLITS_VALS = [2000, 3000, 4000]
-UNIFORMITY_VALS = [0.25, 0.5, 0.75]
-NUM_WORKERS = 12
+NUM_SPLITS_VALS = [500, 1000, 2000]
+UNIFORMITY_VALS = [0.3, 0.5, 0.7]
+NUM_WORKERS = 8
 
 
 def main(args):
@@ -43,19 +43,27 @@ def main(args):
                     config["num_splits"] = num_splits
                     config["uniformity"] = uniformity
                     config["seed"] = trial
-                    config["save_name"] = "%s_%s_%d_%.2f_%d" % (save_name, image_name, num_splits, uniformity, trial)
+                    config["save_name"] = "%s_%s_%d_%.2f_%d" % (
+                        save_name,
+                        image_name,
+                        num_splits,
+                        uniformity,
+                        trial,
+                    )
 
                     # Dump config.
                     config_name = "%s.json" % config["save_name"]
-                    config_path = os.path.join(os.path.dirname(args.base_config), config_name)
+                    config_path = os.path.join(
+                        os.path.dirname(args.base_config), config_name
+                    )
                     with open(config_path, "w") as config_file:
                         json.dump(config, config_file)
                     config_paths.append(config_path)
 
     # Run experiments.
-    cmd = "parallel --citation -j %d :::" % NUM_WORKERS
+    cmd = "parallel -j %d :::" % NUM_WORKERS
     for i, config_path in enumerate(config_paths):
-        cmd += " \"python3 main.py mosaic %s\"" % config_path
+        cmd += ' "python3 main.py mosaic %s"' % config_path
     os.system(cmd)
 
 

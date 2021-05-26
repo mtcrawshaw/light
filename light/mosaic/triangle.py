@@ -5,6 +5,9 @@ import random
 from typing import List, Tuple, Dict, Any
 
 
+BOUNDARY_TOL = -0.1
+
+
 class Triangle:
     """ A piece of a mosaic with a triangle shape.  """
 
@@ -82,7 +85,7 @@ class Triangle:
         alpha = ((by - cy) * (px - cx) + (cx - bx) * (py - cy)) / denom
         beta = ((cy - ay) * (px - cx) + (ax - cx) * (py - cy)) / denom
         gamma = 1.0 - alpha - beta
-        return alpha >= 0 and beta >= 0 and gamma >= 0
+        return alpha >= BOUNDARY_TOL and beta >= BOUNDARY_TOL and gamma >= BOUNDARY_TOL
 
     def bounds(self) -> Tuple[Tuple[int, int], Tuple[int, int]]:
         """

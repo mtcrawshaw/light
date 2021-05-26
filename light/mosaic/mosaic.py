@@ -11,6 +11,9 @@ from PIL import Image
 from light.mosaic import Canvas
 
 
+IMAGE_EXT = "png"
+
+
 def create_mosaic(config: Dict[str, Any]) -> None:
     """ Create a gradient-colored mosaic from an image. """
 
@@ -47,10 +50,8 @@ def create_mosaic(config: Dict[str, Any]) -> None:
             json.dump(config, config_file, indent=4)
 
         # Save original image.
-        dot_pos = config["image_path"].rfind(".")
-        image_ext = config["image_path"][dot_pos + 1 :]
         image_path = os.path.join(
-            save_dir, "%s_image.%s" % (config["save_name"], image_ext)
+            save_dir, "%s_image.%s" % (config["save_name"], IMAGE_EXT)
         )
         image.save(image_path)
 
@@ -61,6 +62,6 @@ def create_mosaic(config: Dict[str, Any]) -> None:
 
         # Save mosaic.
         mosaic_path = os.path.join(
-            save_dir, "%s_mosaic.%s" % (config["save_name"], image_ext)
+            save_dir, "%s_mosaic.%s" % (config["save_name"], IMAGE_EXT)
         )
         mosaic.save(mosaic_path)

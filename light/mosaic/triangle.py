@@ -5,7 +5,7 @@ import random
 from typing import List, Tuple, Dict, Any
 
 
-BOUNDARY_TOL = -0.1
+BOUNDARY_TOL = -0.06
 
 
 class Triangle:

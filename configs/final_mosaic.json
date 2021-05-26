@@ -1,0 +1,9 @@
+{
+    "image_path": "data/mosaics/wolf.jpg",
+
+    "num_splits": 1500,
+    "uniformity": 0.3,
+
+    "seed": 1,
+    "save_name": "final_mosaic"
+}

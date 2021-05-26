@@ -104,9 +104,8 @@ into triangles. This way all of the computations involved will be much, much fas
 allowing for mosaic generation on high resolution images in no time.
 
 Thoughts from tests:
-- For number of splits, try 500, 1000, 2000
-- For uniformity, try 0.3, 0.5, 0.7
-- Can definitely run 8 workers next time
+- For number of splits, try 1500
+- For uniformity, try 0.3, 0.4
 
 
 ----------------------------------------------------------------------------------------
